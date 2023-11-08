@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instagram_clone/manager/firebase_manager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +10,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  final _manager = FirebaseManager();
+  bool _isLoading = false;
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+
+  void _register() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _manager.login(_email.text, _password.text)
+    .then((value) {
+      if(value == "Success") {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+        Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const MainPage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error")));
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
