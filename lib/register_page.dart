@@ -1,4 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone/main_page.dart';
+import 'package:instagram_clone/manager/firebase_manager.dart';
+import 'package:instagram_clone/widget/loading.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -8,6 +15,36 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
+  final _picker = ImagePicker();
+  XFile? _xFile;
+
+  final _manager = FirebaseManager(); //. TODO BUNIYAM
+
+  bool _isLoading = false; /// TODO MANA YOZ BULARNIYAM!
+  final _username = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+
+  void _register() { /// TODO KEYIN BUNI!
+    setState(() {
+      _isLoading = true;
+    });
+    _manager.register(
+      _username.text,
+      _email.text,
+      _password.text,
+      File(_xFile?.path ?? "")
+    ).then((value) {
+      if(value == "Success") {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MainPage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error $value")));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,25 +52,106 @@ class _RegisterPageState extends State<RegisterPage> {
           decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: const [
-                  Color(0xff5d30b7),
-                  Color(0xffa40f9c),
+                  Color(0xff133e80),
+                  Color(0xffad104c),
                 ],
               )
           ),
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20.0),
             child: Stack(
               children: [
                 Center(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
+                      Text('Instagram',
+                          style: GoogleFonts.dancingScript(
+                              fontSize: 45, color: Colors.white)),
+                      const SizedBox(height: 50),
+                      _xFile == null ? InkWell(
+                        onTap: () {
+                          setState(() async {
+                            _xFile = await _picker.pickImage(source: ImageSource.gallery);
+                          });
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: const Icon(Icons.image,color: Colors.white,size: 100,),
+                        ),
+                      ) : CircleAvatar(
+                        radius: 60,
+                        foregroundImage: FileImage(File(_xFile?.path ?? "")),
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Username',
+                          hintStyle: const TextStyle(color: Colors.white70),
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Email',
+                          hintStyle: const TextStyle(color: Colors.white70),
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          hintStyle: const TextStyle(color: Colors.white70),
+                          fillColor: Colors.grey[200],
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      _isLoading ? const Loading() : InkWell(
+                        onTap: _register,
+                        child: Container(
+                          width: double.infinity,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey,width: 2)
+                          ),
+                          child: const Center(
+                            child: Text("Register",style: TextStyle(color: Colors.white),),
+                          ),
+                        ),
+                      )
                     ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Already have an account? Sign In",style: TextStyle(color: Colors.white)),
                   ),
                 )
               ],
             ),
-        ),
+          ),
         )
     );
   }

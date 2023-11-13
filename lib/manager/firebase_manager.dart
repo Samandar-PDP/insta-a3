@@ -12,6 +12,10 @@ class FirebaseManager {
   final _realTime = FirebaseDatabase.instance; // chatting
   final _db = FirebaseFirestore.instance; // save users data
 
+  User? getUser() {
+    return _auth.currentUser;
+  }
+
   Future<String> login(String email, String password) async {
     try {
       final response = await _auth.signInWithEmailAndPassword(email: email, password: password);

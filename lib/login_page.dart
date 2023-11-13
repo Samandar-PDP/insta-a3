@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:instagram_clone/manager/firebase_manager.dart';
+import 'package:instagram_clone/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  void _register() async {
+  void _login() async {
     setState(() {
       _isLoading = true;
     });
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
       if(value == "Success") {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
         Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const MainPage()));
+        .push(MaterialPageRoute(builder: (context) => Container()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error")));
       }
@@ -104,7 +105,10 @@ class _LoginPageState extends State<LoginPage> {
                 left: 0,
                 right: 0,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => const RegisterPage()));
+                  },
                   child: const Text("Don't have an accaunt? Sign Up",style: TextStyle(color: Colors.white)),
                 ),
               )
