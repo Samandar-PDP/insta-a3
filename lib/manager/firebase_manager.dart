@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 
 class FirebaseManager {
   final _auth = FirebaseAuth.instance; // login | register
@@ -32,7 +33,8 @@ class FirebaseManager {
       File image // -> dart:io dan bo'lishi kerak!!!
       ) async {
     try {
-      final uploadTask = await _storage.ref('user_images/${image.path}').putFile(image);
+      final imageName = DateTime.now().microsecondsSinceEpoch;
+      final uploadTask = await _storage.ref('user_images/$imageName').putFile(image);
       final imageUri = await uploadTask.ref.getDownloadURL();
       final registerResponse =
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -43,9 +45,11 @@ class FirebaseManager {
         'password': password,
         'image': imageUri
       };
-      await _db.collection('users').doc(registerResponse.user?.uid).set(newUser);
+      final userId = _realTime.ref('users').push().key;
+      await _realTime.ref('users/$userId').set(newUser);
       return 'Success';
     } catch(e) {
+      debugPrint(e.toString());
       return 'Error';
     }
   }

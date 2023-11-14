@@ -19,14 +19,14 @@ class _RegisterPageState extends State<RegisterPage> {
   final _picker = ImagePicker();
   XFile? _xFile;
 
-  final _manager = FirebaseManager(); //. TODO BUNIYAM
+  final _manager = FirebaseManager();
 
-  bool _isLoading = false; /// TODO MANA YOZ BULARNIYAM!
+  bool _isLoading = false;
   final _username = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  void _register() { /// TODO KEYIN BUNI!
+  void _register() {
     setState(() {
       _isLoading = true;
     });
@@ -38,8 +38,12 @@ class _RegisterPageState extends State<RegisterPage> {
     ).then((value) {
       if(value == "Success") {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MainPage()));
+        Navigator.of(context)
+            .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error $value")));
       }
     });
@@ -62,19 +66,19 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Stack(
               children: [
                 Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: ListView(
                     children: [
-                      Text('Instagram',
-                          style: GoogleFonts.dancingScript(
-                              fontSize: 45, color: Colors.white)),
+                      const SizedBox(height: 50),
+                      Center(
+                        child: Text('Instagram',
+                            style: GoogleFonts.dancingScript(
+                                fontSize: 45, color: Colors.white)),
+                      ),
                       const SizedBox(height: 50),
                       _xFile == null ? InkWell(
-                        onTap: () {
-                          setState(() async {
-                            _xFile = await _picker.pickImage(source: ImageSource.gallery);
-                          });
+                        onTap: () async {
+                          _xFile = await _picker.pickImage(source: ImageSource.gallery);
+                          setState(() {});
                         },
                         child: Container(
                           width: 100,
@@ -88,7 +92,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         radius: 60,
                         foregroundImage: FileImage(File(_xFile?.path ?? "")),
                       ),
+                      const SizedBox(height: 30),
                       TextField(
+                        controller: _username,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Username',
                           hintStyle: const TextStyle(color: Colors.white70),
@@ -100,6 +110,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 20),
                       TextField(
+                        controller: _email,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Email',
                           hintStyle: const TextStyle(color: Colors.white70),
@@ -111,6 +126,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       const SizedBox(height: 20),
                       TextField(
+                        controller: _password,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Password',
                           hintStyle: const TextStyle(color: Colors.white70),

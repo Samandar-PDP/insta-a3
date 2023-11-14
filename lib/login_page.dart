@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:instagram_clone/main_page.dart';
 import 'package:instagram_clone/manager/firebase_manager.dart';
 import 'package:instagram_clone/register_page.dart';
+import 'package:instagram_clone/widget/loading.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
       if(value == "Success") {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
         Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Container()));
+        .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error")));
       }
@@ -62,8 +64,13 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 45, color: Colors.white)),
                     const SizedBox(height: 50),
                     TextField(
+                      controller: _email,
+                      style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white
+                      ),
                       decoration: InputDecoration(
-                          hintText: 'Username',
+                          hintText: 'Email',
                           hintStyle: const TextStyle(color: Colors.white70),
                           fillColor: Colors.grey[200],
                         border: OutlineInputBorder(
@@ -73,6 +80,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 20),
                     TextField(
+                      controller: _password,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.white
+                      ),
                       decoration: InputDecoration(
                         hintText: 'Password',
                         hintStyle: const TextStyle(color: Colors.white70),
@@ -83,8 +95,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    InkWell(
-                      onTap: () {},
+                    _isLoading ? const Loading() : InkWell(
+                      onTap: _login,
                       child: Container(
                         width: double.infinity,
                         height: 60,

@@ -14,7 +14,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("${_manager.getUser()?.email}"),
+        child: Text("${_manager.getUser()?.email}",style: TextStyle(fontSize: 30),),
       ),
     );
   }
