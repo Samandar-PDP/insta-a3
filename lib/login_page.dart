@@ -4,6 +4,7 @@ import 'package:instagram_clone/main_page.dart';
 import 'package:instagram_clone/manager/firebase_manager.dart';
 import 'package:instagram_clone/register_page.dart';
 import 'package:instagram_clone/widget/loading.dart';
+import 'package:instagram_clone/widget/message.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,22 +20,22 @@ class _LoginPageState extends State<LoginPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  void _login() async {
+  void _login() {
     setState(() {
       _isLoading = true;
     });
     _manager.login(_email.text, _password.text)
     .then((value) {
       if(value == "Success") {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+        showSuccessMessage(context, 'Success'); /// 1
         Navigator.of(context)
         .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error")));
+        showErrorMessage(context, "Error"); /// 2
+        setState(() {
+          _isLoading = false;
+        });
       }
-      setState(() {
-        _isLoading = false;
-      });
     });
   }
 

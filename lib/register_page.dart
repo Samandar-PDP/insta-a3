@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/main_page.dart';
 import 'package:instagram_clone/manager/firebase_manager.dart';
 import 'package:instagram_clone/widget/loading.dart';
+import 'package:instagram_clone/widget/message.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -37,14 +38,14 @@ class _RegisterPageState extends State<RegisterPage> {
       File(_xFile?.path ?? "")
     ).then((value) {
       if(value == "Success") {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+        showSuccessMessage(context, 'Success');
         Navigator.of(context)
             .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
       } else {
         setState(() {
           _isLoading = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error $value")));
+        showErrorMessage(context, 'Error');
       }
     });
   }
