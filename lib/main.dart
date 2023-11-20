@@ -5,6 +5,7 @@ import 'package:instagram_clone/manager/firebase_manager.dart';
 import 'login_page.dart';
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(InstagramApp());
