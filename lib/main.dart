@@ -8,6 +8,7 @@ import 'package:instagram_clone/screen/main_screen.dart';
 import 'manager/firebase_manager.dart';
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.remove(); /// mana
   await Firebase.initializeApp();
