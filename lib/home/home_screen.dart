@@ -17,14 +17,14 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: Text(
           "Instagram",
-          style: GoogleFonts.dancingScript(fontSize: 34, color: Colors.black),
+          style: GoogleFonts.dancingScript(fontSize: 34, color: Colors.white), /// 2
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(100),
           child: SizedBox(height: 100,width: double.infinity,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
+           // shrinkWrap: true,
             itemCount: 10,
             itemBuilder: (context, index) {
               return _buildBox('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg');
@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Stack(
       children: [
         Container(
+          margin: const EdgeInsets.all(8), /// ozgardi
           width: 70,
           height: 70,
           decoration:
@@ -59,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Positioned(
-            right: 0,
-            bottom: 30,
+            right: 5,
+            bottom: 20, /// 1
             child: Container(
               height: 24,
               width: 24,

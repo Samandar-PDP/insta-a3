@@ -59,14 +59,19 @@ class FirebaseManager {
     final id = getUser()?.uid ?? "";
     final snapshot = await _db.ref('users').child(id).get();
     final map = snapshot.value as Map<Object?, Object?>;
+    final postList = await getMyPosts();
     return FbUser
-        .user(map['uid'].toString(),
-        map['image'].toString(),
-        map['username'].toString(),
-        map['email'].toString(),
-        map['password'].toString(),
-        map['nickname'].toString()
-    );
+        .user(
+        uid: map['uid'].toString(),
+        image: map['image'].toString(),
+        username: map['username'].toString(),
+        email: map['email'].toString(),
+        password: map['password'].toString(),
+        nickname: map['nickname'].toString(),
+      postCount: postList.length,
+      followersCount: int.tryParse(map['followers_count'].toString()) ?? 0,
+      followingCount: int.tryParse(map['following_count'].toString()) ?? 0,
+     );
   }
   Future<void> logOut() async {
     await _auth.signOut();
@@ -88,6 +93,23 @@ class FirebaseManager {
       'text': post.text,
       'view_count': post.viewCount
     };
-    await _db.ref('posts').set(newPost);
+    await _db.ref('posts/$id').set(newPost);
+  }
+   /// o'zgardi
+  Future<List<Post>> getMyPosts() async {
+    final id = getUser()?.uid;
+    final List<Post> postList = [];
+    final snapshotData = await _db.ref('posts').get();
+    for(var map in snapshotData.children) {
+      final post = Post.fromJson(map.value as Map<Object?, Object?>);
+      if(post.ownerId == id) {
+        postList.add(post);
+      }
+    }
+    return postList;
+  }
+  Future<void> deletePost(Post? post) async {
+    await _storage.ref('post_images/${post?.imageName}').delete();
+    await _db.ref('posts/${post?.id}').remove();
   }
 }
