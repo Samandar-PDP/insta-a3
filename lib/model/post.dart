@@ -7,6 +7,8 @@ class Post{
   int? likeCount;
   int viewCount = 0; /// 1
   String? imageName; /// 2
+  String? ownerImage;
+  String? ownerNickname;
 
   Post.post(
   {
@@ -17,7 +19,9 @@ class Post{
     required this.uploadedTime,
     required this.likeCount,
     required this.viewCount, /// 3
-    required this.imageName
+    required this.imageName,
+    required this.ownerImage,
+    required this.ownerNickname
   }/// 4
       );
   Map<String, dynamic> toJson() {
@@ -29,7 +33,9 @@ class Post{
       'time': uploadedTime,
       'like_count': likeCount,
       'view_count': viewCount, /// 5
-      'image_name': imageName /// 6
+      'image_name': imageName,
+      'owner_image': ownerImage,
+      'owner_nickname': ownerNickname
     };
   }
   Post.fromJson(Map<Object?, Object?> json) :
@@ -40,5 +46,7 @@ class Post{
         uploadedTime = json['time'].toString(),
         likeCount = int.tryParse(json['like_count'].toString()) ?? 0,
        viewCount = int.tryParse(json['view_count'].toString()) ?? 0, /// 7
-       imageName = json['image_name'].toString(); /// 8
+       imageName = json['image_name'].toString(),/// 8
+       ownerImage = json['owner_image'].toString(),/// 8
+       ownerNickname = json['owner_nickname'].toString();/// 8
 }

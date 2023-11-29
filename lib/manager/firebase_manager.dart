@@ -83,6 +83,7 @@ class FirebaseManager {
         .putFile(File(post.image ?? ""));
     final imageUri = await uploadTask.ref.getDownloadURL();
     final currentTime = DateTime.now().toLocal().toString();
+    final user = await getCurrentUser();
     final newPost = {
       'id': id,
       'owner_id': getUser()?.uid,
@@ -91,7 +92,9 @@ class FirebaseManager {
       'image': imageUri,
       'image_name': imageName,
       'text': post.text,
-      'view_count': post.viewCount
+      'view_count': post.viewCount,
+      'owner_image': user.image,
+      'owner_nickname': user.nickname
     };
     await _db.ref('posts/$id').set(newPost);
   }
@@ -111,5 +114,27 @@ class FirebaseManager {
   Future<void> deletePost(Post? post) async {
     await _storage.ref('post_images/${post?.imageName}').delete();
     await _db.ref('posts/${post?.id}').remove();
+  }
+
+  Future<List<FbUser>> getAllUsers() async {
+    final snapshot = await _db.ref('users').get();
+    final List<FbUser> userList = [];
+    final myId = getUser()?.uid;
+    for(var map in snapshot.children) {
+      final user = FbUser.fromJson(map.value as Map<Object?,Object?>);
+      if(user.uid != myId) {
+        userList.add(user);
+      }
+    }
+    return userList;
+  }
+  Future<List<Post>> getAllPosts() async {
+    final snapshot = await _db.ref('posts').get();
+    final List<Post> postList = [];
+    for(var map in snapshot.children) {
+      final post = Post.fromJson(map.value as Map<Object?, Object?>);
+      postList.add(post);
+    }
+    return postList;
   }
 }

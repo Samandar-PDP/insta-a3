@@ -21,16 +21,16 @@ class FbUser {
     required this.followersCount});
   FbUser();
 
-  FbUser.fromJson(Map<String, dynamic> json) :
-      uid = json['uid'],
-      image = json['image'],
-      email = json['email'],
-      username = json['username'],
-  nickname = json['nickname'],
-      password = json['password'],
-  postCount = json['post_count'], /// 4
-  followersCount = json['follower_count'],
-  followingCount = json['following_count'];
+  FbUser.fromJson(Map<Object?, Object?> json) : /// 1
+      uid = json['uid'].toString(),
+      image = json['image'].toString(),
+      email = json['email'].toString(),
+      username = json['username'].toString(),
+  nickname = json['nickname'].toString(),
+      password = json['password'].toString(),
+  postCount = int.tryParse(json['post_count'].toString()) ?? 0, /// 4
+  followersCount = int.tryParse(json['follower_count'].toString()) ?? 0,
+  followingCount = int.tryParse(json['following_count'].toString()) ?? 0;
 
   Map<String, dynamic> toJson() {
     return {

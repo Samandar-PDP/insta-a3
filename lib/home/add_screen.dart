@@ -39,7 +39,9 @@ class _AddScreenState extends State<AddScreen> {
           uploadedTime: null,
           likeCount: 0,
           viewCount: 0,
-          imageName: null
+          imageName: null,
+        ownerImage: null,
+        ownerNickname: null
       )
     ).then((value) {
       Navigator.of(context)
@@ -55,7 +57,10 @@ class _AddScreenState extends State<AddScreen> {
         elevation: 0,
         title: const Text("Add Screen"),
         actions: [
-          _isLoading ? const Loading() :
+          _isLoading ? const Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: Loading(),
+          ) :
           CupertinoButton(child: const Icon(CupertinoIcons.add), onPressed: () {
             if(_image != null && _textController.text.isNotEmpty) {
               _uploadPost();
