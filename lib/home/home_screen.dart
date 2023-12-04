@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if(index == 0) {
                       return _buildBox();
                     } else {
-                      return StoryItem(fbUser: snapshot.data![index - 1], onClick: () {
+                      return StoryItem(fbUser: snapshot.data![index], onClick: () {
                         Navigator.of(context).push(
                           CupertinoPageRoute(builder: (context) => ChatScreen(user: currentUser))
                         );
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               } else if(snapshot.data?.isEmpty == true){
                 return const Center(child: Text("No users"),);
               } else {
-                return const Loading();
+                return const SizedBox(height: 24,width: 24,child: Loading());
               }
             },
           ))
